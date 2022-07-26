@@ -11,10 +11,11 @@
 <body>
 
     <script>
+
     var config = {
         type: Phaser.AUTO,
         width: 4200,
-        height: 800,
+        height: 900,
         physics: {
             default: 'arcade',
         },
@@ -27,12 +28,10 @@
 
     };
 
-    class Player extends Phaser.Physics.Arcade.Sprite
-    {
+    class Player extends Phaser.Physics.Arcade.Sprite {
       leftWall = true;
       rightWall = true;
-        constructor(scene, x, y)
-        {
+        constructor(scene, x, y) {
             super(scene, x, y, 'player');
             scene.add.existing(this);
             scene.physics.add.existing(this);
@@ -42,10 +41,8 @@
         }
     }
 
-    class Enemy extends Phaser.Physics.Arcade.Sprite
-    {
-        constructor(scene, x, y)
-        {
+    class Enemy extends Phaser.Physics.Arcade.Sprite {
+        constructor(scene, x, y) {
             super(scene, x, y, 'enemy');
             scene.add.existing(this);
             scene.physics.add.existing(this);
@@ -71,8 +68,7 @@
     var gui;
     var guiTimer;
 
-    function preload()
-    {
+    function preload() {
         this.load.image('sky', 'assets/clouds.png');
         this.load.image('platform', 'assets/platform.png');
         //this.load.image('player', 'assets/wabbit.png');
@@ -81,8 +77,7 @@
         this.load.spritesheet('player', 'assets/industrialCharacter.png', {frameWidth: 16, frameHeight: 16});
     }
 
-    function create()
-    {
+    function create() {
         //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
        let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
        /*this.anims.create({
@@ -108,8 +103,7 @@
        this.physics.add.collider(player, platforms);
 
        //Create the carrot interactables
-       for (var i = 0; i < totalEnemies; i++)
-       {
+       for (var i = 0; i < totalEnemies; i++) {
            let myEnemy = new Enemy(this, Phaser.Math.Between(0, game.scale.width), Phaser.Math.Between(0, game.scale.height-80));
            this.physics.add.collider(myEnemy, platforms);
            enemies.push(myEnemy);
@@ -126,19 +120,22 @@
        gui = this.add.text(16, 16, '', {fontSize: '32px', fill: '#000'});
     }
 
-    function createPlatforms(scene)
-    {
+    function createPlatforms(scene) {
         platforms = scene.physics.add.staticGroup();
 
         //basePlatform is the floor of the game
         let basePlatform = platforms.create(game.scale.width/2, game.scale.height-16, 'platform');
         basePlatform.setScale(150, 1).refreshBody(); //scales the base platform in the x axis to cover the entire floor
 
-        platforms.create(250, 350, 'platform').setScale(1, 1).refreshBody(); //creates the upper left platform
+        platforms.create(250, 250, 'platform').setScale(1, 1).refreshBody(); //creates the upper left platform
 
-        platforms.create(950, 700, 'platform'); //creates the bottome right platform
-        platforms.create(1000, 480, 'platform').setScale(1, 15).refreshBody();
-        platforms.create(1300, 480, 'platform').setScale(1, 15).refreshBody();
+        platforms.create(900, 420, 'platform').setScale(1, 20).refreshBody();
+        platforms.create(1200, 540, 'platform').setScale(1, 30).refreshBody();
+        platforms.create(1500, 540, 'platform').setScale(1, 30).refreshBody();
+        platforms.create(1800, 540, 'platform').setScale(1, 30).refreshBody();
+        platforms.create(2100, 540, 'platform').setScale(1, 30).refreshBody();
+        platforms.create(2400, 540, 'platform').setScale(1, 30).refreshBody();
+        platforms.create(2700, 420, 'platform').setScale(1, 20).refreshBody();
     }
 
     function update() {
@@ -152,23 +149,18 @@
           player.anims.isPlaying = false;
         }
         //Handle player movements
-        if (cursors.left.isDown || keys.A.isDown)
-        {
+        if (cursors.left.isDown || keys.A.isDown) {
             player.setVelocityX(-700);
 
             //player.play('texture');
-            if (player.anims.isPlaying){
-
-            } else{
+            if (!player.anims.isPlaying){
               player.play('run');
             }
             //player.play('run');
-
             player.flipX = true;
         }
 
-        if (cursors.right.isDown || keys.D.isDown)
-        {
+        if (cursors.right.isDown || keys.D.isDown) {
             player.setVelocityX(700);
             if (!player.anims.isPlaying) {
               player.play('run');
@@ -179,8 +171,7 @@
 
     }
 
-    function jump(event)
-    {
+    function jump(event) {
         if (player.body.touching.down) {
           player.setVelocityY(-1000);
           player.leftWall = true;
@@ -189,18 +180,17 @@
           player.leftWall = false;
           player.rightWall = true;
           player.setVelocityY(-1000);
-          player.setVelocityX(4800);
+          player.setVelocityX(800);
         } else if(player.body.touching.right && player.rightWall) {
           player.leftWall = true;
           player.rightWall = false;
           player.setVelocityY(-1000);
-          player.setVelocityX(-4800);
+          player.setVelocityX(-800);
         }
     }
 
     //This function is called when a player overlaps with a carrot
-    function eatEnemy(player, enemy)
-    {
+    function eatEnemy(player, enemy) {
         enemy.disableBody(true, true); //remove that particular carrot from the game (physics and visibility)
         currentEnemies = currentEnemies -1;
         gui.setText('Yum yum!');
@@ -208,8 +198,7 @@
     }
 
     //Reset the gui text to be empty after the guiTimer elapses
-    function removeText()
-    {
+    function removeText() {
         gui.setText('');
     }
 
