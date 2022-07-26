@@ -29,7 +29,7 @@
     };
 
     class Player extends Phaser.Physics.Arcade.Sprite {
-      leftWall = true;
+      leftWall = true;frame);
       rightWall = true;
       constructor(scene, x, y) {
         super(scene, x, y, 'player');
@@ -76,7 +76,7 @@
       this.load.image('sky', 'assets/clouds.png');
       this.load.image('platform', 'assets/platform.png');
       //this.load.image('player', 'assets/wabbit.png');
-      this.load.spritesheet('enemy', 'assets/enemy.png');
+      this.load.spritesheet('enemy', 'assets/enemy.png', {frameWidth: 16, frameHeight: 16});
       //this.load.spritesheet('player', 'assets/texture.png', { frameWidth: 20, frameHeight: 20});
       this.load.spritesheet('player', 'assets/industrialCharacter.png', {frameWidth: 16, frameHeight: 16});
     }
