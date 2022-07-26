@@ -76,7 +76,7 @@
       this.load.image('sky', 'assets/clouds.png');
       this.load.image('platform', 'assets/platform.png');
       //this.load.image('player', 'assets/wabbit.png');
-      this.load.image('enemy', 'assets/carrot.png');
+      this.load.spritesheet('enemy', 'assets/enemy.png');
       //this.load.spritesheet('player', 'assets/texture.png', { frameWidth: 20, frameHeight: 20});
       this.load.spritesheet('player', 'assets/industrialCharacter.png', {frameWidth: 16, frameHeight: 16});
     }
@@ -103,6 +103,14 @@
         let myEnemy = new Enemy(this, Phaser.Math.Between(0, game.scale.width), Phaser.Math.Between(0, game.scale.height-80));
         this.physics.add.collider(myEnemy, platforms);
         enemies.push(myEnemy);
+          this.anims.create({
+             key: 'idle',
+             frames: this.anims.generateFrameNumbers('enemy', {
+               frames: [0,1,2,3] }),
+               frameRate: 8,
+               repeat: -1
+           })
+           myEnemy.play('idle');
       }
 
       this.physics.add.overlap(player, enemies, eatEnemy, null, this);
@@ -187,6 +195,8 @@
       currentEnemies = currentEnemies -1;
       gui.setText('Yum yum!');
       guiTimer = this.time.delayedCall(1000, removeText, [], this);
+        
+      this.scene.restart();
     }
 
     //Reset the gui text to be empty after the guiTimer elapses
