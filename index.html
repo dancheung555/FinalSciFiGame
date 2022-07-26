@@ -73,7 +73,7 @@
 
     var shift;
     var inputDisabled = false;
-    var s;
+    var myScene;
 
     function preload() {
       this.load.image('sky', 'assets/clouds.png');
@@ -87,7 +87,7 @@
     function create() {
       //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
       let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
-      s = this;
+      myScene = this;
       this.anims.create({
         key: 'run',
         frames: this.anims.generateFrameNumbers('player', {
@@ -199,14 +199,14 @@
           player.setVelocityY(-1000);
           player.setVelocityX(700);
           inputDisabled = true;
-          guiTimer = s.time.delayedCall(330, inputEnable, [], s);
+          guiTimer = myScene.time.delayedCall(330, inputEnable, [], myScene);
         } else if(player.body.touching.right /*&& player.rightWall*/) {
           player.leftWall = true;
           player.rightWall = false;
           player.setVelocityY(-1000);
           player.setVelocityX(-700);
           inputDisabled = true;
-          guiTimer = s.time.delayedCall(330, inputEnable, [], s);
+          guiTimer = myScene.time.delayedCall(330, inputEnable, [], myScene);
         }
     }
         
