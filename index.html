@@ -72,6 +72,7 @@
     var guiTimer;
 
     var shift;
+    var inputDisabled = false;
     var s;
 
     function preload() {
@@ -207,6 +208,10 @@
           inputDisabled = true;
           guiTimer = s.time.delayedCall(330, inputEnable, [], s);
         }
+    }
+        
+    function inputEnable(){
+        inputDisabled = false;
     }
 
     //This function is called when a player overlaps with a carrot
