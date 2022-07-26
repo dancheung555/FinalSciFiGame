@@ -72,6 +72,7 @@
     var guiTimer;
 
     var shift;
+    var this;
 
     function preload() {
       this.load.image('sky', 'assets/clouds.png');
@@ -85,6 +86,7 @@
     function create() {
       //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
       let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
+      s = this;
       this.anims.create({
         key: 'run',
         frames: this.anims.generateFrameNumbers('player', {
@@ -144,50 +146,67 @@
     }
 
     function update() {
-      player.setVelocityX(0);
-
-      if (currentEnemies === 0){
-        gui.setText('You win!');
-        player.disableBody();
-        player.anims.isPlaying = false;
-      }
-
-      if (cursors.left.isDown || keys.A.isDown) {
-        player.setVelocityX(-700);
-
-        //player.play('texture');
-        if (!player.anims.isPlaying){
-          player.play('run');
-        }
-        //player.play('run');
-        player.flipX = true;
-      }
-
-      if (cursors.right.isDown || keys.D.isDown) {
-        player.setVelocityX(700);
-        if (!player.anims.isPlaying) {
-          player.play('run');
+        //Player will not move in the x-axis unless a movement key is being pressed
+        if(!inputDisabled){
+          player.setVelocityX(0);
         }
 
-        player.flipX = false;
-      }
+
+        if (currentEnemies === 0){
+          gui.setText('You win!');
+          player.disableBody();
+          player.anims.isPlaying = false;
+        }
+        //Handle player movements
+        if ((cursors.left.isDown || keys.A.isDown) && !inputDisabled) {
+            player.setVelocityX(-700);
+
+            //player.play('texture');
+            if (!player.anims.isPlaying){
+              player.play('run');
+            }
+            //player.play('run');
+            player.flipX = true;
+        }
+
+        if ((cursors.right.isDown || keys.D.isDown) && !inputDisabled) {
+            player.setVelocityX(700);
+            if (!player.anims.isPlaying) {
+              player.play('run');
+            }
+
+            player.flipX = false;
+        }
+
+        if(player.body.touching.left || player.body.touching.right){
+          player.body.setGravityY(0);
+          player.body.setVelocityY(300);
+        }else{
+          player.body.setGravityY(3000);
+        }
 
     }
 
     function jump(event) {
-      if (player.body.touching.down) {
-        player.setVelocityY(-1000);
-        player.leftWall = true;
-        player.rightWall = true;
-      } else if(player.body.touching.left && player.leftWall) {
-        player.leftWall = false;
-        player.rightWall = true;
-        player.setVelocityY(-1000);
-      } else if(player.body.touching.right && player.rightWall) {
-        player.leftWall = true;
-        player.rightWall = false;
-        player.setVelocityY(-1000);
-      }
+        if (player.body.touching.down) {
+          player.setVelocityY(-1000);
+          player.leftWall = true;
+          player.rightWall = true;
+        } else if(player.body.touching.left /*&& player.leftWall*/) {
+          player.leftWall = false;
+          player.rightWall = true;
+          player.setVelocityY(-1000);
+          player.setVelocityX(700);
+          inputDisabled = true;
+          guiTimer = s.time.delayedCall(330, inputEnable, [], s);
+        } else if(player.body.touching.right /*&& player.rightWall*/) {
+          player.leftWall = true;
+          player.rightWall = false;
+          player.setVelocityY(-1000);
+          player.setVelocityX(-700);
+          inputDisabled = true;
+          guiTimer = s.time.delayedCall(330, inputEnable, [], s);
+        }
     }
 
     //This function is called when a player overlaps with a carrot
