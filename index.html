@@ -60,7 +60,7 @@
     var platforms;
     var player;
     var enemies = [];
-    var totalEnemies = 12;
+    var totalEnemies = 100;
     var currentEnemies = totalEnemies;
 
     //Keyboard controls
@@ -78,7 +78,7 @@
     var notMoving = true;
 
     function preload() {
-      this.load.image('sky', 'assets/clouds.png');
+      this.load.image('bg', 'assets/testMap.png');
       this.load.image('platform', 'assets/platform.png');
       //this.load.image('player', 'assets/wabbit.png');
       this.load.spritesheet('enemy', 'assets/enemy.png', {frameWidth: 16, frameHeight: 16});
@@ -88,7 +88,7 @@
 
     function create() {
       //Set the background origin to be at (0, 0) or top left corner of the image rather than the center of the image asset
-      let background = this.add.tileSprite(0, 0, game.scale.width, game.scale.height, 'sky').setOrigin(0, 0);
+      let background = this.add.tileSprite(0, 0, game.scale.width*2, game.scale.height*2, 'bg').setOrigin(0, 0);
       myScene = this;
       this.anims.create({
         key: 'run',
@@ -126,7 +126,7 @@
 
       //Create the carrot interactables
       for (var i = 0; i < totalEnemies; i++) {
-        let myEnemy = new Enemy(this, Phaser.Math.Between(0, game.scale.width), Phaser.Math.Between(0, game.scale.height-80));
+        let myEnemy = new Enemy(this, 1200+40*i, 100);
         this.physics.add.collider(myEnemy, platforms);
         enemies.push(myEnemy);
           this.anims.create({
@@ -137,8 +137,6 @@
                repeat: -1
            })
            myEnemy.play('idle');
-
-
       }
 
       this.physics.add.overlap(player, enemies, eatEnemy, null, this);
@@ -177,12 +175,6 @@
         }
 
 
-
-        if (currentEnemies === 0){
-          gui.setText('You win!');
-          player.disableBody();
-          player.anims.isPlaying = false;
-        }
         //Handle player movements
         if ((cursors.left.isDown || keys.A.isDown) && !inputDisabled) {
             player.setVelocityX(-700);
