@@ -180,7 +180,7 @@ true
             player.flipX = false;
         }
 
-        if(player.body.touching.left || player.body.touching.right){
+        if((player.body.touching.left || player.body.touching.right) && player.body.velocity.y > 0){
           player.body.setGravityY(0);
           player.body.setVelocityY(300);
           inputDisabled = false;
