@@ -218,18 +218,18 @@
     }
 
     function jump(event) {
-        if (player.body.touching.down) {
-          player.setVelocityY(-1000);
+        if (player.body.blocked.down) {
+          player.setVelocityY(-1001);
           player.leftWall = true;
           player.rightWall = true;
-        } else if(player.body.touching.left /*&& player.leftWall*/) {
+        } else if(player.body.blocked.left /*&& player.leftWall*/) {
           player.leftWall = false;
           player.rightWall = true;
           player.setVelocityY(-1000);
           player.setVelocityX(700);
           inputDisabled = true;
           guiTimer = myScene.time.delayedCall(330, inputEnable, [], myScene);
-        } else if(player.body.touching.right /*&& player.rightWall*/) {
+        } else if(player.body.blocked.right /*&& player.rightWall*/) {
           player.leftWall = true;
           player.rightWall = false;
           player.setVelocityY(-1000);
