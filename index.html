@@ -70,6 +70,8 @@
 
     var gui;
     var guiTimer;
+    var levelTimer;
+    var timerText;
 
     var shift;
     var inputDisabled = false;
@@ -124,10 +126,12 @@
           repeat: 1
       })
 
+      levelTimer = this.time.addEvent({ delay: 10000, loop:false});
+      timerText = this.add.text(32,32);
 
       //Create the platforms and the pla//yer character set to collide with the platforms
       createPlatforms(this);
-      player = new Player(this, 400, 400);
+      player = new Player(this, 400, 944);
       this.physics.add.collider(player, platforms);
       this.cameras.main.setDeadzone(400,250);
       this.cameras.main.setBounds(0, 0, game.scale.width, game.scale.height, false);
@@ -181,11 +185,24 @@
     }
 
     function update() {
+        // timerText = this.add.text(10,10);
+
+
+
+        timerText.destroy();
+        timerText = this.add.text(this.cameras.main.scrollX+32,this.cameras.main.scrollY+32);
+        timerText.setText('Timer: '+(10-levelTimer.getProgress()*10).toString().substr(0,5));
+
         //Player will not move in the x-axis unless a movement key is being pressed
         if(!inputDisabled){
           player.setVelocityX(0);
         }
-
+        if(levelTimer.getProgress()>=1)
+        {
+          this.scene.restart();
+          inputDisabled = false;
+        }
+        console.log(levelTimer.getProgress().toString());
         if ((cursors.left.isDown || keys.A.isDown) && !inputDisabled) {
             player.setVelocityX(-700);
             //player.play('texture');
